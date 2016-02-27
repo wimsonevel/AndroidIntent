@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
@@ -13,7 +14,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final String TAG_MESSAGE = "data.MainActivity";
 
     private EditText txtInput;
-    private Button btnSend;
+    private Button btnSend1, btnSend2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,9 +22,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         txtInput = (EditText) findViewById(R.id.txtInputData);
-        btnSend = (Button) findViewById(R.id.btnSend);
+        btnSend1 = (Button) findViewById(R.id.btnSend1);
+        btnSend2 = (Button) findViewById(R.id.btnSend2);
 
-        btnSend.setOnClickListener(this);
+        btnSend1.setOnClickListener(this);
+        btnSend2.setOnClickListener(this);
     }
 
     private void startSecondAct(String sometext) {
@@ -32,10 +35,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         startActivity(intent);
     }
 
+    private void startThirdAct(String sometext) {
+        Intent intent = new Intent(this, ThirdActivity.class);
+        intent.putExtra(TAG_MESSAGE, sometext);
+        startActivityForResult(intent, 48);
+    }
+
     @Override
     public void onClick(View view) {
-        if(view == btnSend){
+        if(view == btnSend1){
             startSecondAct(txtInput.getText().toString());
+        }else if(view == btnSend2){
+            startThirdAct(txtInput.getText().toString());
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if((requestCode == 48) && (resultCode == RESULT_OK)){
+            String message = data.getStringExtra(ThirdActivity.TAG_MESSAGE);
+            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
         }
     }
 }
